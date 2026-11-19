@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ADEMICRE — Escola de Princípios | Plataforma de Eventos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- Notificações -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- Cabeçalho -->
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <button type="button" class="brand-btn" onclick="switchView('public')">
+        <span class="brand-emblem" aria-hidden="true">
+          <svg viewBox="0 0 80 88" width="40" height="44">
+            <path d="M10 6 H70 V24 H10 Z" fill="#011D4B" stroke="#011D4B" stroke-width="2"/>
+            <text x="40" y="19" text-anchor="middle" fill="#F8F4EA" font-family="Inter, sans-serif" font-size="9.5" font-weight="800" letter-spacing="2.2">ADEMICRE</text>
+            <path d="M12 24 H68 V58 C68 72 40 82 40 82 C40 82 12 72 12 58 Z" fill="#F8F4EA" stroke="#011D4B" stroke-width="2.5"/>
+            <!-- Livro aberto -->
+            <path d="M19 46 Q29 40 38 45 L38 56 Q29 51 19 55 Z" fill="#011D4B"/>
+            <path d="M61 46 Q51 40 42 45 L42 56 Q51 51 61 55 Z" fill="#011D4B"/>
+            <path d="M22 52 Q30 48 38 52 L38 59 Q30 55 22 58 Z" fill="#0064B0"/>
+            <path d="M58 52 Q50 48 42 52 L42 59 Q50 55 58 58 Z" fill="#0064B0"/>
+            <!-- Cruz central -->
+            <path d="M38.5 29 H41.5 V62 H38.5 Z" fill="#0064B0"/>
+            <path d="M31 37 H49 V39.8 H31 Z" fill="#0064B0"/>
+            <!-- Faixa inferior -->
+            <path d="M6 59 H74 V71 H6 Z" fill="#011D4B" stroke="#F8F4EA" stroke-width="1.2"/>
+            <text x="40" y="67.5" text-anchor="middle" fill="#F8F4EA" font-family="Inter, sans-serif" font-size="5.6" font-weight="700" letter-spacing="0.5">ESCOLA DE PRINCÍPIOS</text>
+          </svg>
+        </span>
+        <span class="brand-text">
+          <strong>ADEMICRE</strong>
+          <small>Escola de Princípios • Eventos</small>
+        </span>
+      </button>
+
+      <nav class="nav-links" aria-label="Navegação principal">
+        <a href="#eventos-section" onclick="switchView('public')">Eventos</a>
+        <a href="#detalhes-evento-section" onclick="switchView('public')">Detalhes</a>
+        <a href="#programacao-section" onclick="switchView('public')">Programação</a>
+        <a href="#lotes-section" onclick="switchView('public')">Lotes</a>
+      </nav>
+
+      <div class="topbar-actions">
+        <button type="button" class="btn btn-outline-cream" onclick="openModal('lookup-modal')">Meus Ingressos</button>
+        <button type="button" class="btn btn-primary" onclick="toggleAdminView()">
+          <span id="admin-nav-label">Painel Admin</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================================================================== -->
+  <!-- VIEW 1: SITE PÚBLICO                                                  -->
+  <!-- ===================================================================== -->
+  <main id="view-public">
+    <!-- Hero -->
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow">PLATAFORMA OFICIAL DE INSCRIÇÕES</span>
+          <h1 class="hero-title">Escola de <span class="italic-accent">Princípios</span></h1>
+          <p id="hero-subtitle" class="hero-subtitle">Formando líderes com fundamento, clareza e serviço na igreja local.</p>
+          <p id="hero-description" class="hero-desc">
+            Participe dos encontros e treinamentos promovidos pela igreja. Garanta seu ingresso individual ou em grupo com emissão de QR Code após confirmação do pagamento.
+          </p>
+          <div class="hero-cta-row">
+            <button type="button" class="btn btn-primary btn-lg" onclick="openRegistrationModal()">Quero me inscrever</button>
+            <a href="#eventos-section" class="btn btn-outline-cream btn-lg">Ver eventos disponíveis</a>
+          </div>
+        </div>
+
+        <div class="hero-card-highlight">
+          <div class="hero-badge-top">EVENTO EM DESTAQUE</div>
+          <h2 id="featured-event-title">Escola de Princípios 2027</h2>
+          <p id="featured-event-meta" class="meta-line">08 de Maio de 2027 • 08h30 às 18h00</p>
+          <p id="featured-event-venue" class="meta-line">Igreja Local — Auditório Principal</p>
+          <div class="spots-box">
+            <div class="spots-header">
+              <span>Vagas disponíveis</span>
+              <strong id="featured-spots-text">--</strong>
+            </div>
+            <div class="progress-track">
+              <div id="featured-spots-bar" class="progress-fill" style="width: 0%"></div>
+            </div>
+          </div>
+          <div class="countdown-box" aria-label="Contagem regressiva">
+            <div><strong id="cd-days">00</strong><span>Dias</span></div>
+            <div><strong id="cd-hours">00</strong><span>Horas</span></div>
+            <div><strong id="cd-mins">00</strong><span>Min</span></div>
+            <div><strong id="cd-secs">00</strong><span>Seg</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Eventos Disponíveis -->
+    <section id="eventos-section" class="section-block">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">AGENDA</span>
+          <h2>Eventos Disponíveis</h2>
+          <p>Selecione um evento para visualizar programação completa, lotes e realizar sua inscrição.</p>
+        </div>
+        <div id="events-grid" class="cards-grid-3"></div>
+      </div>
+    </section>
+
+    <!-- Página / Detalhes do Evento Selecionado -->
+    <section id="detalhes-evento-section" class="section-block section-alt">
+      <div class="container">
+        <div id="event-detail-card" class="detail-panel"></div>
+      </div>
+    </section>
+
+    <!-- Programação -->
+    <section id="programacao-section" class="section-block">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">CRONOGRAMA</span>
+          <h2>Programação do Evento</h2>
+          <p>Organização por horários para facilitar sua participação.</p>
+        </div>
+        <div id="schedule-list" class="schedule-list"></div>
+      </div>
+    </section>
+
+    <!-- Categorias e Lotes -->
+    <section id="lotes-section" class="section-block section-alt">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">INSCRIÇÕES</span>
+          <h2>Categorias &amp; Lotes Disponíveis</h2>
+          <p>Valores atualizados conforme o lote ativo e disponibilidade de vagas.</p>
+        </div>
+        <div id="batches-grid" class="cards-grid-3"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================================================================== -->
+  <!-- VIEW 2: PAINEL ADMINISTRATIVO                                         -->
+  <!-- ===================================================================== -->
+  <section id="view-admin" class="hidden section-block">
+    <div class="container">
+      <div class="admin-header">
+        <div>
+          <span class="eyebrow">ÁREA ADMINISTRATIVA</span>
+          <h2>Gestão de Eventos, Inscrições &amp; Check-in</h2>
+          <p class="muted">Simulação de perfis de acesso e regras de negócio. Em produção, valide roles no backend e RLS no Supabase.</p>
+        </div>
+        <div class="role-switcher">
+          <label for="admin-role-select">Perfil:</label>
+          <select id="admin-role-select" onchange="changeAdminRole(this.value)">
+            <option value="super_admin">Administrador Geral</option>
+            <option value="organizer">Organizador</option>
+            <option value="reception">Recepção (Check-in)</option>
+          </select>
+          <button type="button" class="btn btn-outline-cream" onclick="switchView('public')">Voltar ao site</button>
+        </div>
+      </div>
+
+      <div class="admin-tabs" role="tablist">
+        <button type="button" class="tab-btn active" data-tab="dashboard" onclick="switchAdminTab('dashboard')">Dashboard &amp; Financeiro</button>
+        <button type="button" class="tab-btn" data-tab="participants" onclick="switchAdminTab('participants')">Participantes</button>
+        <button type="button" class="tab-btn" data-tab="events" onclick="switchAdminTab('events')">Eventos, Lotes &amp; Cupons</button>
+        <button type="button" class="tab-btn" data-tab="checkin" onclick="switchAdminTab('checkin')">Check-in Recepção</button>
+      </div>
+
+      <!-- Aba 1: Dashboard e Financeiro -->
+      <div id="admin-panel-dashboard" class="admin-panel">
+        <div id="kpi-grid" class="kpi-grid"></div>
+        <div id="financial-box" class="detail-panel mt-24"></div>
+      </div>
+
+      <!-- Aba 2: Participantes -->
+      <div id="admin-panel-participants" class="admin-panel hidden">
+        <div class="detail-panel">
+          <div class="toolbar">
+            <input type="search" id="participant-search" oninput="renderAdminParticipants()" placeholder="Buscar por nome, e-mail ou código..." />
+            <select id="participant-status-filter" onchange="renderAdminParticipants()">
+              <option value="ALL">Todos os status</option>
+              <option value="APPROVED">Pagamento aprovado</option>
+              <option value="PENDING">Aguardando pagamento</option>
+              <option value="CANCELLED">Cancelado / Reembolsado</option>
+            </select>
+            <button type="button" class="btn btn-primary" onclick="exportParticipantsCSV()">Exportar CSV</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Código</th>
+                  <th>Participante</th>
+                  <th>Igreja / Cidade</th>
+                  <th>Categoria / Lote</th>
+                  <th>Pagamento</th>
+                  <th>Check-in</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="admin-participants-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Aba 3: Eventos, Lotes, Perguntas e Cupons -->
+      <div id="admin-panel-events" class="admin-panel hidden">
+        <div class="cards-grid-2">
+          <form class="detail-panel form-stack" onsubmit="handleSaveEvent(event)">
+            <h3>Criar / Atualizar Evento</h3>
+            <label>
+              <span>Nome do evento *</span>
+              <input type="text" id="admin-ev-title" required placeholder="Ex: Conferência de Família" />
+            </label>
+            <label>
+              <span>Data e horário de início *</span>
+              <input type="datetime-local" id="admin-ev-date" required />
+            </label>
+            <label>
+              <span>Local e endereço *</span>
+              <input type="text" id="admin-ev-venue" required placeholder="Igreja Central — Rua Exemplo, 100" />
+            </label>
+            <label>
+              <span>Organizadores</span>
+              <input type="text" id="admin-ev-organizers" placeholder="Equipe Pastoral e Liderança Local" />
+            </label>
+            <label>
+              <span>Limite total de vagas</span>
+              <input type="number" id="admin-ev-capacity" min="1" value="150" required />
+            </label>
+            <label>
+              <span>Descrição</span>
+              <textarea id="admin-ev-desc" rows="3" placeholder="Detalhes do evento..."></textarea>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" id="admin-ev-published" checked />
+              <span>Publicar evento no site público</span>
+            </label>
+            <button type="submit" class="btn btn-primary">Salvar evento</button>
+          </form>
+
+          <form class="detail-panel form-stack" onsubmit="handleCreateCoupon(event)">
+            <h3>Criar Cupom de Desconto</h3>
+            <label>
+              <span>Código do cupom *</span>
+              <input type="text" id="admin-cp-code" required placeholder="EX: LIDER10" />
+            </label>
+            <label>
+              <span>Tipo de desconto</span>
+              <select id="admin-cp-type">
+                <option value="percent">Percentual (%)</option>
+                <option value="fixed">Valor fixo (R$)</option>
+              </select>
+            </label>
+            <label>
+              <span>Valor do desconto *</span>
+              <input type="number" id="admin-cp-value" min="1" required placeholder="10" />
+            </label>
+            <button type="submit" class="btn btn-outline-cream">Adicionar cupom</button>
+            <div id="admin-coupons-list" class="coupons-list"></div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Aba 4: Check-in Recepção -->
+      <div id="admin-panel-checkin" class="admin-panel hidden">
+        <div class="detail-panel checkin-box">
+          <h3>Validador de Check-in (QR Code / Código / Nome)</h3>
+          <p class="muted">Regras: ingresso válido libera entrada uma única vez; pendente ou cancelado é bloqueado.</p>
+          <form class="checkin-form" onsubmit="handleCheckIn(event)">
+            <input type="text" id="checkin-query" required placeholder="Digite o token QR, código (ex: AXM-1001) ou nome..." />
+            <button type="submit" class="btn btn-primary">Validar entrada</button>
+          </form>
+          <div id="checkin-feedback" class="checkin-feedback hidden"></div>
+          <div id="checkin-history" class="mt-24"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 1: INSCRIÇÃO EM ETAPAS + PAGAMENTO                              -->
+  <!-- ===================================================================== -->
+  <div id="reg-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="reg-modal-title">
+    <div class="modal-backdrop" onclick="closeModal('reg-modal')"></div>
+    <div class="modal-card modal-lg">
+      <div class="modal-head">
+        <h3 id="reg-modal-title">Inscrição no Evento</h3>
+        <button type="button" class="icon-close" onclick="closeModal('reg-modal')" aria-label="Fechar">✕</button>
+      </div>
+
+      <form id="reg-form" onsubmit="handleRegistrationSubmit(event)" class="form-stack">
+        <!-- Etapa 1: Lote, quantidade e cupom -->
+        <div class="step-block">
+          <h4>1. Categoria, Lote e Quantidade</h4>
+          <div class="form-grid-2">
+            <label>
+              <span>Categoria / Lote *</span>
+              <select id="reg-batch-select" onchange="updateOrderSummary()"></select>
+            </label>
+            <label>
+              <span>Quantidade de ingressos *</span>
+              <input type="number" id="reg-qty" min="1" max="10" value="1" onchange="renderParticipantForms()" oninput="updateOrderSummary()" />
+            </label>
+          </div>
+          <div class="coupon-row">
+            <input type="text" id="reg-coupon-input" placeholder="Cupom de desconto (ex: PRINCIPIOS15)" />
+            <button type="button" class="btn btn-outline-cream" onclick="applyCoupon()">Aplicar cupom</button>
+          </div>
+        </div>
+
+        <!-- Etapa 2: Dados de cada participante + perguntas personalizadas -->
+        <div class="step-block">
+          <h4>2. Dados dos Participantes</h4>
+          <div id="participants-dynamic-container" class="participants-stack"></div>
+        </div>
+
+        <!-- Etapa 3: Pagamento, LGPD e Termos -->
+        <div class="step-block">
+          <h4>3. Pagamento, Privacidade e Termos</h4>
+          <div id="payment-method-group" class="form-grid-2">
+            <label>
+              <span>Forma de pagamento</span>
+              <select id="reg-payment-method" onchange="updateOrderSummary()">
+                <option value="pix">Pix (QR Code + Copia e Cola)</option>
+                <option value="credit_card">Cartão de crédito (fluxo seguro do provedor)</option>
+                <option value="free">Inscrição gratuita (quando aplicável)</option>
+              </select>
+            </label>
+            <div id="order-summary-box" class="summary-box"></div>
+          </div>
+
+          <label class="checkbox-row mt-12">
+            <input type="checkbox" id="reg-privacy" required />
+            <span>Li e concordo com o <strong>Aviso de Privacidade (LGPD)</strong> e os <strong>Termos de Inscrição</strong> do evento. *</span>
+          </label>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline-cream" onclick="closeModal('reg-modal')">Cancelar</button>
+          <button type="submit" id="reg-submit-btn" class="btn btn-primary">Continuar inscrição</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 2: COMPROVANTE / INGRESSO DIGITAL COM QR CODE                   -->
+  <!-- ===================================================================== -->
+  <div id="ticket-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="ticket-modal-title">
+    <div class="modal-backdrop" onclick="closeModal('ticket-modal')"></div>
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3 id="ticket-modal-title">Situação da Inscrição &amp; Ingresso</h3>
+        <button type="button" class="icon-close" onclick="closeModal('ticket-modal')" aria-label="Fechar">✕</button>
+      </div>
+      <div id="ticket-modal-body"></div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 3: CONSULTA "MEUS INGRESSOS"                                    -->
+  <!-- ===================================================================== -->
+  <div id="lookup-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="lookup-modal-title">
+    <div class="modal-backdrop" onclick="closeModal('lookup-modal')"></div>
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3 id="lookup-modal-title">Consultar Inscrição</h3>
+        <button type="button" class="icon-close" onclick="closeModal('lookup-modal')" aria-label="Fechar">✕</button>
+      </div>
+      <form class="form-stack" onsubmit="handleLookupSubmit(event)">
+        <label>
+          <span>Código da inscrição ou e-mail cadastrado *</span>
+          <input type="text" id="lookup-input" required placeholder="Ex: AXM-1001 ou joao@email.com" />
+        </label>
+        <button type="submit" class="btn btn-primary">Buscar inscrição</button>
+      </form>
+      <div id="lookup-results" class="mt-16"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
